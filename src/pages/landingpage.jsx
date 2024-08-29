@@ -70,7 +70,7 @@ const LandingPage = () => {
       {products.length ? (
         <div className="w-full h-full bg-slate-200 flex flex-row box-border">
           <div
-            className={`fixed pt-[7vh] ${slideStyle.styleProperty} h-[90vh] bg-zinc-50 border-2 py-2 border-x-slate-300 px-2 w-[240px] box-border`}
+            className={`fixed pt-[7vh] ${slideStyle.styleProperty} h-screen bg-zinc-50 border-2 py-2 border-x-slate-300 px-2 w-[240px] box-border`}
           >
             <button
               onClick={addNewProductHandler}

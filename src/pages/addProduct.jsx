@@ -71,7 +71,7 @@ const AddProduct = () => {
   return (
     <>
       <section>
-        <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+        <div className="bg-slate-200 flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             <h2 className="text-center text-2xl font-bold leading-tight text-black">
               {params.id == undefined ? "Create New Product" : "Update Product"}
@@ -194,7 +194,10 @@ const AddProduct = () => {
                     type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
                   >
-                    Create Product <ArrowRight className="ml-2" size={16} />
+                    {params.id == undefined
+                      ? "Create Product"
+                      : "Update Product"}{" "}
+                    <ArrowRight className="ml-2" size={16} />
                   </button>
                 </div>
               </div>

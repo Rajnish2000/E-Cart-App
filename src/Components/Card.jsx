@@ -12,8 +12,11 @@ const Card = ({ product, productViewHandler }) => {
           </div>
           <div className="p-4">
             <h1 className="inline-flex items-center text-lg font-semibold">
-              {product.title.slice(0, 15)}...
+              {product.title.split(" ").slice(0, 4).join(" ")}...
             </h1>
+            <p className="items-center text-md font-semibold text-gray-500">
+              Price : $ {product.price}
+            </p>
             <p className="mt-3 text-sm text-gray-600">
               {product.description.slice(0, 70)}...
             </p>
