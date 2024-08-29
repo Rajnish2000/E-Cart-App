@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "../Components/Card";
 import axios from "../utils/axios";
 import { ChartColumnStacked, Logs, SquareStack } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Components/Loader";
+import { ProductContext } from "../utils/Context";
 
 const LandingPage = () => {
-  let url = "https://fakestoreapi.com/products";
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
+  const [products] = useContext(ProductContext);
   const [category, setCategory] = useState([]);
+  const [filterProducts, setFilterProducts] = useState([]);
   const [slideStyle, setSlideStyle] = useState({
     styleProperty: "left-[-64vw] z-20",
     open: false,
@@ -18,16 +20,14 @@ const LandingPage = () => {
     (async () => {
       await getProducts();
     })();
-  }, []);
+  }, [products]);
   const getProducts = async () => {
     try {
-      const res = await axios.get(url);
-      const cate = await axios.get(url + "/categories");
-      if (localStorage.getItem("products") == null) {
-        localStorage.setItem("products", JSON.stringify(res.data));
+      // const res = await axios.get(url);
+      const cate = await axios.get("/products/categories");
+      if (products.length != 0) {
+        setCategory([...new Set([...products.map((item) => item.category)])]);
       } else {
-        const localData = localStorage.getItem("products");
-        setProducts(JSON.parse(localData));
         setCategory(cate.data);
       }
     } catch (e) {
@@ -36,8 +36,13 @@ const LandingPage = () => {
   };
   const getCategoryData = async (type) => {
     try {
-      let res = await axios.get(url + `/category/${type}`);
-      setProducts(res.data);
+      // let res = await axios.get(url + `/category/${type}`);
+      let res = products.filter((item) => {
+        if (item.category === type) {
+          return item;
+        }
+      });
+      setFilterProducts([...res]);
     } catch (e) {
       console.log(e);
     }
@@ -51,7 +56,6 @@ const LandingPage = () => {
     navigate("/product/addProduct");
   };
   const slideHandler = () => {
-    console.log(slideStyle);
     if (slideStyle.open == false) {
       slideStyle.styleProperty = "left-[0vw] z-0 duration-500 delay-100";
       slideStyle.open = !slideStyle.open;
@@ -98,20 +102,33 @@ const LandingPage = () => {
           </div>
           <div className="overflow-auto">
             <div className="w-100 h-14 flex items-center px-5 font-bold text-red-500 justify-between">
-              <button onClick={slideHandler} className="z-50">
+              <button onClick={slideHandler} className="z-40">
                 <Logs />
               </button>
             </div>
-            <div className="mx-auto grid w-full max-w-7xl items-center space-y-4 px-2 py-3 md:grid-cols-2 md:gap-6 md:space-y-0 lg:grid-cols-4">
-              {products.map((product) => {
-                return (
-                  <Card
-                    product={product}
-                    key={product.id}
-                    productViewHandler={productViewHandler}
-                  />
-                );
-              })}
+            <div className="w-[100%] text-right px-8 font-semibold text-2xl text-zinc-600">
+              {filterProducts.length == 0 ? "All" : filterProducts[0].category}
+            </div>
+            <div className="flex w-full justify-around flex-row flex-wrap">
+              {filterProducts.length == 0
+                ? products.map((product) => {
+                    return (
+                      <Card
+                        product={product}
+                        key={product.id}
+                        productViewHandler={productViewHandler}
+                      />
+                    );
+                  })
+                : filterProducts.map((product) => {
+                    return (
+                      <Card
+                        product={product}
+                        key={product.id}
+                        productViewHandler={productViewHandler}
+                      />
+                    );
+                  })}
             </div>
           </div>
         </div>

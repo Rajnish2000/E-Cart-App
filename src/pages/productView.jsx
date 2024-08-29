@@ -1,19 +1,21 @@
-import axios from "axios";
-import { ChevronLeft, ChevronRight, Heart, Share, Star } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import axios from "../utils/axios";
+import { ChevronLeft, ChevronRight, Delete, Edit, Star } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../Components/Loader";
+import { ProductContext } from "../utils/Context";
 
 const ProductView = () => {
-  let url = "https://fakestoreapi.com/products";
   const prams = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({});
+  const [products, setProducts] = useContext(ProductContext);
   useEffect(() => {
     (async () => {
       let localData = JSON.parse(localStorage.getItem("products"));
       if (localData.length == 0) {
-        const res = await axios.get(url + `/${prams.id}`);
+        const res = await axios.get(`/products/${prams.id}`);
         setProduct(res.data);
       } else {
         let res = localData.find((item) => item.id == prams.id);
@@ -21,6 +23,18 @@ const ProductView = () => {
       }
     })();
   }, []);
+
+  const editHandler = (id) => {
+    navigate(`/product/edit/${id}`);
+  };
+  const deleteHandler = (id) => {
+    let localData = JSON.parse(localStorage.getItem("products"));
+    localData = localData.filter((item) => item.id != id);
+    setProducts([...localData]);
+    localStorage.setItem("products", JSON.stringify(localData));
+    navigate("/");
+  };
+
   return (
     <>
       <nav className="flex relative top-10 left-14" aria-label="Breadcrumb">
@@ -124,19 +138,21 @@ const ProductView = () => {
                     </button>
                     <div className="grid grid-cols-2 gap-2.5">
                       <button
+                        onClick={() => editHandler(product.id)}
                         type="button"
                         className="inline-flex items-center justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                       >
-                        <Heart size={16} className="mr-3" />
-                        <span className="block">Wishlist</span>
+                        <Edit size={16} className="mr-3" />
+                        <span className="block">Edit</span>
                       </button>
                       <div className="relative">
                         <button
+                          onClick={() => deleteHandler(product.id)}
                           type="button"
                           className="inline-flex w-full items-center justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                         >
-                          <Share size={16} className="mr-3" />
-                          <span className="block">Share</span>
+                          <Delete size={16} className="mr-3" />
+                          <span className="block">Delete</span>
                         </button>
                       </div>
                     </div>

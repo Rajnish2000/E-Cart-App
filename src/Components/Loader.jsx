@@ -1,7 +1,11 @@
 const Loader = () => {
   return (
     <>
-      <button type="button" className="fixed bottom-2/4 left-2/4" disabled>
+      <button
+        type="button"
+        className="fixed bottom-[50vh] left-[45vw]"
+        disabled
+      >
         <svg
           className="animate-spin h-24 w-54 mr-3 lucide lucide-loader-circle"
           xmlns="http://www.w3.org/2000/svg"
