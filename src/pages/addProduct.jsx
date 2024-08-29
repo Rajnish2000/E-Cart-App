@@ -8,6 +8,7 @@ import { ProductContext } from "../utils/Context";
 const AddProduct = () => {
   const [products, setProducts] = useContext(ProductContext);
   const [formData, setFormData] = useState();
+  const [category, setCategory] = useState([]);
   const { register, handleSubmit, setValue } = useForm();
   const params = useParams();
   const [show, setShow] = useState("hidden disabled");
@@ -27,6 +28,12 @@ const AddProduct = () => {
         setValue("other_category", data.category, { shouldValidate: true });
         setValue("description", data.description, { shouldValidate: true });
       }
+    }
+    let localData = JSON.parse(localStorage.getItem("products"));
+    if (products.length != 0) {
+      setCategory([...new Set([...products.map((item) => item.category)])]);
+    } else {
+      setCategory([...new Set([...localData.map((item) => item.category)])]);
     }
   }, []);
 
@@ -160,10 +167,13 @@ const AddProduct = () => {
                       id="category"
                       onChange={categoryHandler}
                     >
-                      <option value="men's clothing">Mens Clothing</option>
-                      <option value="jewelery">Jewelery</option>
-                      <option value="electronics">Electronics</option>
-                      <option value="women's clothing">Womens Clothing</option>
+                      {category.map((ItemCat, index) => {
+                        return (
+                          <option key={index} value={ItemCat}>
+                            {ItemCat}
+                          </option>
+                        );
+                      })}
                       <option value="other">other</option>
                     </select>
                     <input
