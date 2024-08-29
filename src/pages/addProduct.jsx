@@ -10,7 +10,7 @@ const AddProduct = () => {
   const [formData, setFormData] = useState();
   const { register, handleSubmit, setValue } = useForm();
   const params = useParams();
-  const [show, setShow] = useState("hidden");
+  const [show, setShow] = useState("hidden disabled");
   const navigate = useNavigate();
   console.log(params.id);
 
@@ -19,7 +19,6 @@ const AddProduct = () => {
       let localData = JSON.parse(localStorage.getItem("products"));
       if (localData.length) {
         let data = localData.find((item) => item.id == params.id);
-        console.log(data);
         setFormData(data);
         setValue("title", data.title, { shouldValidate: true });
         setValue("image", data.image, { shouldValidate: true });
@@ -41,6 +40,10 @@ const AddProduct = () => {
           const res = await axios.post("/products", data);
           let localData = JSON.parse(localStorage.getItem("products"));
           res.data.id = localData.length + 1;
+          res.data.rating = {
+            rate: 3.9,
+            count: 126,
+          };
           localData.push(res.data);
           localStorage.setItem("products", JSON.stringify(localData));
           setProducts(localData);
@@ -48,8 +51,11 @@ const AddProduct = () => {
         } else {
           let localData = JSON.parse(localStorage.getItem("products"));
           let indx = localData.findIndex((item) => item.id == params.id);
-          console.log(data);
-          localData[indx] = { ...data, id: params.id };
+          localData[indx] = {
+            ...data,
+            id: params.id,
+            rating: localData[indx].rating,
+          };
           localStorage.setItem("products", JSON.stringify(localData));
           setProducts(localData);
           navigate(`/product/${params.id}`);
@@ -164,7 +170,6 @@ const AddProduct = () => {
                       id="other"
                       type="text"
                       placeholder="others."
-                      required
                       {...register("other_category")}
                       className={`${show} h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50`}
                     />
