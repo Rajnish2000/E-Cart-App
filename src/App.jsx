@@ -5,9 +5,13 @@ import Routing from "./utils/routes";
 function App() {
   return (
     <>
-      <NavBar />
-      <Routing />
-      <Footer />
+      <div className="relative h-[100%]">
+        <NavBar />
+        <div className="pb-[30vh] bg-slate-200">
+          <Routing />
+        </div>
+        <Footer />
+      </div>
     </>
   );
 }

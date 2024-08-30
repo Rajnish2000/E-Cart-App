@@ -1,8 +1,8 @@
 function Footer() {
   return (
-    <div>
+    <div className="fixed w-[100%] bottom-0 mt-5">
       <hr />
-      <section className="relative overflow-hidden bg-white py-8">
+      <section className="overflow-hidden bg-white py-8">
         <div className="container relative z-10 mx-auto px-4">
           <div className="flex flex-wrap items-center justify-around">
             <div className="w-auto p-2">
