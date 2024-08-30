@@ -1,6 +1,14 @@
-function Footer() {
+import { useEffect, useState } from "react";
+
+function Footer({ style }) {
+  const [position, setPosition] = useState("fixed");
+  useEffect(() => {
+    if (style == "absolute") {
+      setPosition(style);
+    }
+  }, [style]);
   return (
-    <div className="fixed w-[100%] bottom-0 mt-5">
+    <div className={`${position} w-[100%] bottom-0 mt-5`}>
       <hr />
       <section className="overflow-hidden bg-white py-8">
         <div className="container relative z-10 mx-auto px-4">
